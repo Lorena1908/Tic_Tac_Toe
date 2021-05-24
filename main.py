@@ -48,6 +48,13 @@ def winning_move(board, piece, pos):
                 pos['end_pos'] = ((column+2) * square + square -20, (row-2) * square + 20)
                 return True
 
+def check_draw(board):    
+    for row in range(len(board)):
+        for column in range(len(board)):
+            if board[row][column] == 0:
+                return False
+    return True
+
 def is_valid_position(board, row, column):
     return board[row][column] == 0
 
@@ -86,7 +93,7 @@ def main():
     turn = 0
     pos = {}
     run = True
-    text = ''
+    draw = False
     draw_window(board)
     while run:
         for event in pygame.event.get():
@@ -105,8 +112,10 @@ def main():
                             draw_board(board)
                             text = font.render('Blue Wins!', 1, (255,255,255))
                             color = (0,0,255)
-                            print('1 wins!')
                             run = False
+                        elif check_draw(board):
+                            run = False
+                            draw = True
                 else:
                     if is_valid_position(board, row, column):
                         board[row][column] = 2
@@ -115,16 +124,20 @@ def main():
                             draw_board(board)
                             text = font.render('Red Wins!', 1, (255,255,255))
                             color = (255,0,0)
-                            print('2 wins!')
                             run = False
+                        elif check_draw(board):
+                            run = False
+                            draw = True
         
                 draw_window(board)
                 turn += 1
                 turn %= 2
 
                 if not run:
-                    print(pos)
-                    pygame.draw.line(win, color, (pos['start_pos'][0], pos['start_pos'][1]), (pos['end_pos'][0], pos['end_pos'][1]), 15)
+                    if draw:
+                        text = font.render('Draw!', 1, (255,255,255))
+                    else:
+                        pygame.draw.line(win, color, (pos['start_pos'][0], pos['start_pos'][1]), (pos['end_pos'][0], pos['end_pos'][1]), 15)
                     win.blit(text, (width/2 - text.get_width()/2, height/2 - text.get_height()/2))
                     pygame.display.update()
                     pygame.time.wait(2000)
