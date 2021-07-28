@@ -104,7 +104,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
             
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed(num_buttons=3)[0]:
                 x, y = event.pos
                 row = int(floor((y-square/2)/square))
                 column = int(floor(x/square))
